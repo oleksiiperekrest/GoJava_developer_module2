@@ -5,6 +5,7 @@ import model.Developer;
 
 import java.math.BigDecimal;
 import java.sql.*;
+import java.util.List;
 
 /**
  * Необходимо создать консольное приложение, которое использует БД, созданную в домашнем задании для модуля 2.1
@@ -35,13 +36,19 @@ import java.sql.*;
  - подробным описание задачи;
  - инструкцией по разворачиванию приложения на локальной машине.
  */
+
 public class Homework2 {
 
     public static void main(String[] args) throws SQLException {
         DeveloperDAO developerDAO = new JdbcDeveloperDAOImpl();
-        Developer developer = developerDAO.getById(1);
+//        Developer developer = developerDAO.getById(5);
+//
+//        System.out.println(developer);
 
-        System.out.println(developer);
+        List<Developer> developers = developerDAO.getAll();
+        for (Developer developer : developers) {
+            System.out.println(developer + "\n");
+        }
 
     }
 

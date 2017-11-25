@@ -20,4 +20,4 @@ where
 d.id = dc.developer_id and dc.company_id = c.id and
 d.id = ds.developer_id and ds.skill_id = s.id and
 d.id = pd.developer_id and pd.project_id = p.id and
-d.id = 1
+d.id = 6
