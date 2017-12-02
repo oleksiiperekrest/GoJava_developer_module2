@@ -3,7 +3,7 @@ package dao.jdbc;
 import dao.ConnectionUtil;
 import dao.ProjectDAO;
 import model.Project;
-import model.Skill;
+
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;

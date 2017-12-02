@@ -41,14 +41,21 @@ public class Homework2 {
 
     public static void main(String[] args) throws SQLException {
         DeveloperDAO developerDAO = new JdbcDeveloperDAOImpl();
-//        Developer developer = developerDAO.getById(5);
+        Developer developer = developerDAO.getById(43);
+        developerDAO.delete(developer);
+//        developer.setId(43);
+//        developer.setFirstName("Marc");
+//        developer.setLastName("Marvodii");
+//        developerDAO.save(developer);
 //
 //        System.out.println(developer);
 
-        List<Developer> developers = developerDAO.getAll();
-        for (Developer developer : developers) {
-            System.out.println(developer + "\n");
-        }
+//        List<Developer> developers = developerDAO.getAll();
+//        for (Developer developer : developers) {
+//            System.out.println(developer + "\n");
+//        }
+
+
 
     }
 

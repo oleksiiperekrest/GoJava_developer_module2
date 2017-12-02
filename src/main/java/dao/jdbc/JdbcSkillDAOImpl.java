@@ -2,7 +2,6 @@ package dao.jdbc;
 
 import dao.ConnectionUtil;
 import dao.SkillDAO;
-import model.Company;
 import model.Skill;
 
 import java.sql.ResultSet;
