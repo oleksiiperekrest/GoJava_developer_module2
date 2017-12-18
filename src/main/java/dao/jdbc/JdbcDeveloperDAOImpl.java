@@ -6,7 +6,6 @@ import model.Company;
 import model.Developer;
 import model.Project;
 import model.Skill;
-
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,9 +17,8 @@ public class JdbcDeveloperDAOImpl implements DeveloperDAO {
     @Override
     public Developer getById(Integer id) {
         try
-                (Statement statement = ConnectionUtil.getConnection().createStatement()
-
-                ) {
+                (Statement statement = ConnectionUtil.getConnection().createStatement())
+        {
             String sql = "select * from developers where id = " + id;
 
             ResultSet resultSet = statement.executeQuery(sql);
@@ -95,7 +93,8 @@ public class JdbcDeveloperDAOImpl implements DeveloperDAO {
     @Override
     public void save(Developer developer) {
         try
-                (Statement statement = ConnectionUtil.getConnection().createStatement()) {
+                (Statement statement = ConnectionUtil.getConnection().createStatement())
+        {
             int id = developer.getId();
 
             statement.addBatch("insert into developers values ('" +
@@ -124,14 +123,20 @@ public class JdbcDeveloperDAOImpl implements DeveloperDAO {
 
     @Override
     public void update(Developer developer) {
-
+        deleteById(developer.getId());
+        save(developer);
     }
 
     @Override
     public void delete(Developer developer) {
+            deleteById(developer.getId());
+    }
+
+    @Override
+    public void deleteById(Integer id) {
         try
-                (Statement statement = ConnectionUtil.getConnection().createStatement()) {
-            int id = developer.getId();
+                (Statement statement = ConnectionUtil.getConnection().createStatement())
+        {
             statement.addBatch("delete from developers_companies where developer_id = " + id);
             statement.addBatch("delete from developers_skills where developer_id = " + id);
             statement.addBatch("delete from projects_developers where developer_id = " + id);
