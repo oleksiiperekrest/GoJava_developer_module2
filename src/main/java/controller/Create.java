@@ -1,14 +1,8 @@
 package controller;
 
-import dao.DeveloperDAO;
-import dao.jdbc.JdbcCompanyDAOImpl;
-import dao.jdbc.JdbcDeveloperDAOImpl;
-import dao.jdbc.JdbcProjectDAOImpl;
-import dao.jdbc.JdbcSkillDAOImpl;
-import model.Company;
-import model.Developer;
-import model.Project;
-import model.Skill;
+import dao.*;
+import dao.jdbc.*;
+import model.*;
 import view.Show;
 
 import java.math.BigDecimal;
@@ -21,9 +15,9 @@ public class Create {
     public static void createDeveloper(int lastId) {
         Developer developer = new Developer();
 
-        developer.withId(lastId+1);
+        developer.withId(lastId + 1);
 
-        String firstName = Input.getStringInputLimit(50, "Enter first name");
+        String firstName = Input.getStringInputLimitNotNull(50, "Enter first name");
         developer.withFirstName(firstName);
 
         String lastName = Input.getStringInputLimitNotNull(50, "Enter last name");
@@ -82,8 +76,8 @@ public class Create {
 
         DeveloperDAO developerDAO = new JdbcDeveloperDAOImpl();
         try {
+            System.out.println("Created new developer:");
             System.out.println(developer);
-
             developerDAO.save(developer);
 
         } catch (SQLException e) {
@@ -91,20 +85,69 @@ public class Create {
         }
     }
 
-    public static void createProject() {
+    public static void createProject(int lastId) {
 
+        int id = lastId + 1;
+        String name = Input.getStringInputLimitNotNull(50, "Enter name");
+        String description = Input.getStringInputLimitNotNull(100, "Enter description");
+        BigDecimal cost = Input.getBigDecimalPositive("Enter cost");
+
+        Project project = new Project(id, name, description, cost);
+        ProjectDAO projectDAO = new JdbcProjectDAOImpl();
+        try {
+            System.out.println("Created new project:");
+            System.out.println(project);
+            projectDAO.save(project);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void createSkill() {
+    public static void createSkill(int lastId) {
+        int id = lastId + 1;
+        String description = Input.getStringInputLimitNotNull(100, "Enter description");
 
+        Skill skill = new Skill(id, description);
+        SkillDAO skillDAO = new JdbcSkillDAOImpl();
+        try {
+            System.out.println("Created new skill:");
+            System.out.println(skill);
+            skillDAO.save(skill);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void createCompany() {
-
+    public static void createCompany(int lastId) {
+        int id = lastId + 1;
+        String name = Input.getStringInputLimitNotNull(50, "Enter name");
+        String description = Input.getStringInputLimitNotNull(100, "Enter description");
+        String country = Input.getStringInputLimitNotNull(20, "Enter country");
+        Company company = new Company(id, name, description, country);
+        CompanyDAO companyDAO = new JdbcCompanyDAOImpl();
+        try {
+            System.out.println("Created new company:");
+            System.out.println(company);
+            companyDAO.save(company);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void createCustomer() {
-
+    public static void createCustomer(int lastId) {
+        int id = lastId + 1;
+        String firstName = Input.getStringInputLimitNotNull(50, "Enter first name");
+        String lastName = Input.getStringInputLimitNotNull(50, "Enter last name");
+        String info = Input.getStringInputLimitNotNull(100, "Enter info");
+        Customer customer = new Customer(id, firstName, lastName, info);
+        CustomerDAO customerDAO = new JdbcCustomerDAOImpl();
+        try {
+            System.out.println("Created new company:");
+            System.out.println(customer);
+            customerDAO.save(customer);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 

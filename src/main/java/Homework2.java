@@ -1,4 +1,5 @@
 import controller.Create;
+import controller.Edit;
 import controller.Input;
 import dao.*;
 import dao.jdbc.*;
@@ -8,7 +9,6 @@ import view.Show;
 
 import java.sql.SQLException;
 import java.util.List;
-
 
 
 /**
@@ -118,29 +118,39 @@ public class Homework2 {
                     case 2:
                         switch (tableSelect) {
                             case 1:
-                                Create.createDeveloper(developers.get(developers.size()-1).getId());
+                                Create.createDeveloper(developers.get(developers.size() - 1).getId());
+                                developers = developerDAO.getAll();
                                 break;
                             case 2:
-                                Create.createProject();
+                                Create.createProject(projects.get(projects.size() - 1).getId());
+                                projects = projectDAO.getAll();
                                 break;
                             case 3:
-                                Create.createSkill();
+                                Create.createSkill(skills.get(skills.size() - 1).getId());
+                                skills = skillDAO.getAll();
                                 break;
                             case 4:
-                                Create.createCompany();
+                                Create.createCompany(companies.get(companies.size() - 1).getId());
+                                companies = companyDAO.getAll();
                                 break;
                             case 5:
-                                Create.createCustomer();
+                                Create.createCustomer(customers.get(customers.size() - 1).getId());
+                                customers = customerDAO.getAll();
                                 break;
                         }
                         break;
+
+                    case 3:
+                        switch (tableSelect) {
+                            case 1:
+                                Edit.editDeveloper(developerDAO.getById(Input.getIntInput("Enter id of developer")));
+                        }
                 }
 
             }
         }
 
     }
-
 
 
 }
