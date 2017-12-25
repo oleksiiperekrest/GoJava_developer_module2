@@ -1,4 +1,5 @@
 import controller.Create;
+import controller.Delete;
 import controller.Edit;
 import controller.Input;
 import dao.*;
@@ -143,8 +144,92 @@ public class Homework2 {
                     case 3:
                         switch (tableSelect) {
                             case 1:
-                                Edit.editDeveloper(developerDAO.getById(Input.getIntInput("Enter id of developer")));
+                                Developer developer = developerDAO.getById(Input.getIntInput("Enter ID of developer"));
+                                while (developer == null) {
+                                    developer = developerDAO.getById(Input.getIntInput("ID not found, please re-enter!"));
+                                }
+                                Edit.editDeveloper(developer, developerDAO, skillDAO, projectDAO, companyDAO);
+                                developers = developerDAO.getAll();
+                                break;
+                            case 2:
+                                Project project = projectDAO.getById(Input.getIntInput("Enter ID of project"));
+                                while (project == null) {
+                                    project = projectDAO.getById(Input.getIntInput("ID not found, please re-enter!"));
+                                }
+                                Edit.editProject(project, projectDAO);
+                                projects = projectDAO.getAll();
+                                break;
+                            case 3:
+                                Skill skill = skillDAO.getById(Input.getIntInput("Enter ID of project"));
+                                while (skill == null) {
+                                    skill = skillDAO.getById(Input.getIntInput("ID not found, please re-enter!"));
+                                }
+                                Edit.editSkill(skill, skillDAO);
+                                skills = skillDAO.getAll();
+                                break;
+                            case 4:
+                                Company company = companyDAO.getById(Input.getIntInput("Enter ID of company"));
+                                while (company == null) {
+                                    company = companyDAO.getById(Input.getIntInput("ID not found, please re-enter!"));
+                                }
+                                Edit.editCompany(company, companyDAO);
+                                companies = companyDAO.getAll();
+                                break;
+                            case 5:
+                                Customer customer = customerDAO.getById(Input.getIntInput("Enter ID of customer"));
+                                while (customer == null) {
+                                    customer = customerDAO.getById(Input.getIntInput("ID not found, please re-enter!"));
+                                }
+                                Edit.editCustomer(customer, customerDAO);
+                                customers = customerDAO.getAll();
+                                break;
                         }
+                        break;
+                    case 4:
+                        switch (tableSelect) {
+                            case 1:
+                                Developer developer = developerDAO.getById(Input.getIntInput("Enter ID of developer"));
+                                while (developer == null) {
+                                    developer = developerDAO.getById(Input.getIntInput("ID not found, please re-enter!"));
+                                }
+                                Delete.deleteDeveloper(developer, developerDAO);
+                                developers = developerDAO.getAll();
+                                break;
+                            case 2:
+                                Project project = projectDAO.getById(Input.getIntInput("Enter ID of project"));
+                                while (project == null) {
+                                    project = projectDAO.getById(Input.getIntInput("ID not found, please re-enter!"));
+                                }
+                                Delete.deleteProject(project, projectDAO);
+                                projects = projectDAO.getAll();
+                                break;
+                            case 3:
+                                Skill skill = skillDAO.getById(Input.getIntInput("Enter ID of project"));
+                                while (skill == null) {
+                                    skill = skillDAO.getById(Input.getIntInput("ID not found, please re-enter!"));
+                                }
+                                Delete.deleteSkill(skill, skillDAO);
+                                skills = skillDAO.getAll();
+                                break;
+                            case 4:
+                                Company company = companyDAO.getById(Input.getIntInput("Enter ID of company"));
+                                while (company == null) {
+                                    company = companyDAO.getById(Input.getIntInput("ID not found, please re-enter!"));
+                                }
+                                Delete.deleteCompany(company, companyDAO);
+                                companies = companyDAO.getAll();
+                                break;
+                            case 5:
+                                Customer customer = customerDAO.getById(Input.getIntInput("Enter ID of customer"));
+                                while (customer == null) {
+                                    customer = customerDAO.getById(Input.getIntInput("ID not found, please re-enter!"));
+                                }
+                                Delete.deleteCustomer(customer, customerDAO);
+                                customers = customerDAO.getAll();
+                                break;
+                        }
+                        break;
+
                 }
 
             }

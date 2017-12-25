@@ -9,19 +9,19 @@ public class Input {
     private static Scanner input = new Scanner(System.in);
 
     public static String getStringInput() {
-        return input.nextLine();
+        return input.next();
     }
 
     public static String getStringInput(String message) {
         System.out.println(message);
-        return input.nextLine();
+        return input.next();
     }
 
     public static String getStringInputLimit(int limit, String message) {
         System.out.println(message);
         String in;
         while (true) {
-            in = input.nextLine();
+            in = input.next();
             if (in.length() > limit) {
                 System.out.println("(Enter a line no more than " + limit + " symbols!)");
             } else break;
@@ -33,7 +33,7 @@ public class Input {
         System.out.println(message);
         String in;
         while (true) {
-            in = input.nextLine();
+            in = input.next();
             if (in.length() > limit || in.length() == 0) {
                 System.out.println("(Enter a *not empty* line no more than " + limit + " symbols!)");
             } else break;
@@ -44,7 +44,7 @@ public class Input {
 
     public static void readEmptyLine() {
         Scanner input = new Scanner(System.in);
-        input.nextLine();
+        input.next();
     }
 
     /**
@@ -80,7 +80,7 @@ public class Input {
     public static int getPositiveIntInput(String message) {
         System.out.println(message);
         while (true) {
-            String line = input.nextLine();
+            String line = input.next();
             try {
                 int n = Integer.parseInt(line);
                 if (n >= 0) {
@@ -97,17 +97,17 @@ public class Input {
         System.out.println(message);
 
         while (true) {
-            String line = input.nextLine();
+            String line = input.next();
             try {
                 int n = Integer.parseInt(line);
                 if (n >= lowerBound && n <= upperBound) {
                     return n;
-                }
+                } else throw new NumberFormatException();
             } catch (NumberFormatException e) {
-
+                System.out.print("(Enter a positive whole number between " + lowerBound + " and " + upperBound +
+                        "!)\n" + message);
             }
-            System.out.print("(Enter a positive whole number between " + lowerBound + " and " + upperBound +
-                    "!)\n" + message);
+
         }
     }
 
@@ -115,7 +115,7 @@ public class Input {
         System.out.println(message);
 
         while (true) {
-            String line = input.nextLine();
+            String line = input.next();
             try {
                 int n = Integer.parseInt(line);
                 if (n >= lowerBound && n <= upperBound) {
@@ -169,7 +169,7 @@ public class Input {
         System.out.println(message);
 
         while (true) {
-            String line = input.nextLine();
+            String line = input.next();
             try {
                 double d = Double.parseDouble(line);
                 if (d >= 0.0) {
@@ -199,7 +199,7 @@ public class Input {
     public static List<Integer> getIntegerList(String message) {
         System.out.println(message);
         System.out.println("Enter integer numbers separated by space symbol ( \" \")");
-        String in = input.nextLine();
+        String in = input.next();
         List<Integer> integers = new ArrayList<>();
         try {
             String[] numbers = in.split(" ");
@@ -233,7 +233,7 @@ public class Input {
 
         System.out.println(message + " (y/n)");
         while (true) {
-            line = input.nextLine().trim().toLowerCase();
+            line = input.next().trim().toLowerCase();
 
             if (line.equals("y")) {
                 yn = true;
@@ -251,7 +251,7 @@ public class Input {
     public static BigDecimal getBigDecimalPositive(String message) {
         System.out.println(message);
         while (true) {
-            String line = input.nextLine();
+            String line = input.next();
             try {
                 BigDecimal in = new BigDecimal(line);
                 if (in.compareTo(new BigDecimal("0")) >= 0) {
