@@ -198,8 +198,8 @@ public class Input {
 
     public static List<Integer> getIntegerList(String message) {
         System.out.println(message);
-        System.out.println("Enter integer numbers separated by space symbol ( \" \")");
-        String in = input.next();
+        System.out.println("Enter integer numbers separated by space symbol (\" \")");
+        String in = input.nextLine();
         List<Integer> integers = new ArrayList<>();
         try {
             String[] numbers = in.split(" ");
