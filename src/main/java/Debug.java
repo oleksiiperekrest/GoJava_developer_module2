@@ -1,21 +1,31 @@
+import controller.Create;
+import controller.Edit;
 import controller.Input;
-import dao.DeveloperDAO;
-import dao.ProjectDAO;
+import dao.*;
 import dao.jdbc.*;
-import model.*;
-import view.Menu;
+import model.Customer;
+import model.Developer;
 
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Debug {
-    public static void main(String[] args) throws NoSuchFieldException, SQLException {
-        List<Integer> skillIds = Input.getIntegerList("Enter ID's of skills");
-        for ( Integer i : skillIds
-             ) {
-            System.out.println(i);
-        }
+    public static void main(String[] args) throws SQLException {
+//        DeveloperDAO developerDAO = new JdbcDeveloperDAOImpl();
+//        ProjectDAO projectDAO = new JdbcProjectDAOImpl();
+//        SkillDAO skillDAO = new JdbcSkillDAOImpl();
+//        CompanyDAO companyDAO = new JdbcCompanyDAOImpl();
+//        CustomerDAO customerDAO = new JdbcCustomerDAOImpl();
+//
+//        Customer customer = customerDAO.getById(1);
+//        Create.createCustomer(68, projectDAO);
+
+        List<Integer> integers = Input.getIntegerList("Enter ints");
+//        List<Integer> next = Input.getAllowedIntegerList("Enter right numbers", integers);
+//        System.out.println("Filtered input:");
+//        System.out.println(next);
+        int i = Input.getAllowedIntInput("Enter a number", integers);
+        System.out.println("i = " + i);
     }
 }

@@ -2,7 +2,9 @@ package dao.jdbc;
 
 import dao.ConnectionUtil;
 import dao.ProjectDAO;
+import model.Customer;
 import model.Project;
+
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,21 +12,43 @@ import java.util.List;
 
 public class JdbcProjectDAOImpl implements ProjectDAO {
     @Override
-    public Project getById(Integer id) throws SQLException {
-        Statement statement = ConnectionUtil.getConnection().createStatement();
-        String sql = "select * from projects where id = " + id;
+    public Project getById(Integer id) {
+        try
+                (
+                Connection connection = ConnectionUtil.getConnection();
+                Statement statement = connection.createStatement()
+                )
+        {
+            String sql = "select * from projects where id = " + id;
 
-        ResultSet resultSet = statement.executeQuery(sql);
+            ResultSet resultSet = statement.executeQuery(sql);
 
-        if (resultSet.next()) {
-            int pId = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String description = resultSet.getString("description");
-            BigDecimal cost = resultSet.getBigDecimal("cost");
-            return new Project(pId, name, description, cost);
+            if (resultSet.next()) {
+                int pId = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String description = resultSet.getString("description");
+                BigDecimal cost = resultSet.getBigDecimal("cost");
+                Customer customer = null;
+                String customerSql = "select customer_id from customers_projects where project_id = " + id;
+                ResultSet customerResultSet = statement.executeQuery(customerSql);
+                if (customerResultSet.next()) {
+                    int cusId = customerResultSet.getInt("customer_id");
+                    customer = new JdbcCustomerDAOImpl().getById(cusId);
+                }
+                customerResultSet.close();
+                resultSet.close();
+                connection.close();
+                return new Project(pId, name, description, cost, customer);
             }
+            resultSet.close();
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return null;
+
     }
+
     @Override
     public int getColumnSize(String column) throws SQLException {
         Connection connection = ConnectionUtil.getConnection();
@@ -49,9 +73,10 @@ public class JdbcProjectDAOImpl implements ProjectDAO {
             System.out.println("position:" + position);
 
         }
+        rsColumns.close();
+        connection.close();
         return size;
     }
-
 
 
     @Override
@@ -63,24 +88,30 @@ public class JdbcProjectDAOImpl implements ProjectDAO {
         while (resultSet.next()) {
             projIds.add(resultSet.getInt("id"));
         }
+        resultSet.close();
+        statement.close();
         List<Project> projects = new ArrayList<>();
         for (Integer i : projIds) {
             projects.add(getById(i));
         }
+        resultSet.close();
+        statement.close();
         return projects;
     }
 
     @Override
     public void save(Project project) {
         try
-                (Statement statement = ConnectionUtil.getConnection().createStatement())
-        {
+                (Statement statement = ConnectionUtil.getConnection().createStatement()) {
             String sql = "insert into projects values ('" +
                     project.getId() + "', '" +
                     project.getName() + "', '" +
                     project.getDescription() + "', '" +
                     project.getCost() + "')";
-            statement.execute(sql);
+            statement.addBatch(sql);
+            sql = "insert into customers_projects values ('" + project.getCustomer().getId() + "', '" + project.getId() + "')";
+            statement.addBatch(sql);
+            statement.executeBatch();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -100,8 +131,7 @@ public class JdbcProjectDAOImpl implements ProjectDAO {
     @Override
     public void deleteById(Integer id) {
         try
-                (Statement statement = ConnectionUtil.getConnection().createStatement())
-        {
+                (Statement statement = ConnectionUtil.getConnection().createStatement()) {
             statement.addBatch("delete from projects_developers where project_id = " + id);
             statement.addBatch("delete from customers_projects where project_id = " + id);
             statement.addBatch("delete from projects where id = " + id);

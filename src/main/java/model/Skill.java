@@ -1,6 +1,6 @@
 package model;
 
-public class Skill {
+public class Skill extends Entity {
     private int id;
     private String description;
 

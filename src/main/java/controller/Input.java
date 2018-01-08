@@ -1,9 +1,7 @@
 package controller;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Input {
     private static Scanner input = new Scanner(System.in);
@@ -69,6 +67,13 @@ public class Input {
             input.next();
         }
         return input.nextInt();
+    }
+
+    public static int getAllowedIntInput(String message, List<Integer> allowed) {
+        while (true) {
+        int i = getIntInput(message);
+        if (allowed.contains(i)) return i;
+        }
     }
 
     /**
@@ -200,6 +205,7 @@ public class Input {
         System.out.println(message);
         System.out.println("Enter integer numbers separated by space symbol (\" \")");
         String in = input.nextLine();
+        if (in.equals("")) in = input.nextLine();
         List<Integer> integers = new ArrayList<>();
         try {
             String[] numbers = in.split(" ");
@@ -210,6 +216,42 @@ public class Input {
             e.printStackTrace();
         }
         return integers;
+    }
+
+    public static List<Integer> getAllowedIntegerList(String message, List<Integer> allowed) {
+        while (true) {
+            System.out.println(message);
+            System.out.println("Enter integer numbers separated by space symbol (\" \")");
+            System.out.println("Only following numbers are valid:");
+            System.out.println(allowed);
+            String in = input.nextLine();
+            if (in.equals("")) in = input.nextLine();
+            List<Integer> integers = new ArrayList<>();
+            try {
+                String[] numbers = in.split(" ");
+                for (String number : numbers) {
+                    integers.add(Integer.parseInt(number));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            for (int i = integers.size() - 1; i >= 0; i--) {
+                Integer integer = integers.get(i);
+                if (!allowed.contains(integer)) {
+                    integers.remove(integer);
+                    System.out.println(integer + " is invalid input, removed from list");
+                }
+            }
+            if (integers.size() > 0) {
+                //removing repeating numbers
+                Set<Integer> set = new HashSet<>(integers);
+                integers.clear();
+                integers.addAll(set);
+                //sort ascending
+                Collections.sort(integers);
+                return integers;
+            }
+        }
     }
 
     /**

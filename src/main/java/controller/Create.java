@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Create {
 
-    public static void createDeveloper(int lastId) {
+    public static void createDeveloper(int lastId, SkillDAO skillDAO, ProjectDAO projectDAO, CompanyDAO companyDAO) {
         Developer developer = new Developer();
 
         developer.withId(lastId + 1);
@@ -26,13 +26,15 @@ public class Create {
         BigDecimal salary = Input.getBigDecimalPositive("Enter salary");
         developer.withSalary(salary);
 
-        JdbcSkillDAOImpl skillDAO = new JdbcSkillDAOImpl();
+        List<Integer> allSkillIds = null;
         try {
-            Show.listAll(skillDAO.getAll());
+            List<Skill> allSkills = skillDAO.getAll();
+            Show.listAll(allSkills);
+            allSkillIds = Show.getIds(allSkills);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        List<Integer> skillIds = Input.getIntegerList("Enter ID's of skills");
+        List<Integer> skillIds = Input.getAllowedIntegerList("Enter ID's of skills", allSkillIds);
         List<Skill> skills = new ArrayList<>();
         for (Integer id : skillIds) {
             try {
@@ -43,32 +45,39 @@ public class Create {
         }
         developer.withSkills(skills);
 
-        JdbcProjectDAOImpl projectDAO = new JdbcProjectDAOImpl();
+        List<Integer> allProjectIds = null;
         try {
-            Show.listAll(projectDAO.getAll());
+            List<Project> allProjects = projectDAO.getAll();
+            Show.listAll(allProjects);
+            allProjectIds = Show.getIds(allProjects);
+            allProjectIds.add(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        List<Integer> projectIds = Input.getIntegerList("Enter ID's of projects");
+        List<Integer> projectIds = Input.getAllowedIntegerList("Enter ID's of projects", allProjectIds);
         List<Project> projects = new ArrayList<>();
-        for (Integer id : projectIds) {
-            try {
-                projects.add(projectDAO.getById(id));
-            } catch (SQLException | NullPointerException e) {
-                e.printStackTrace();
+        if (!(projectIds.size() == 1 && projectIds.get(0) == 0)) {
+            for (Integer id : projectIds) {
+                try {
+                    projects.add(projectDAO.getById(id));
+                } catch (SQLException | NullPointerException e) {
+                    e.printStackTrace();
+                }
             }
         }
         developer.withProjects(projects);
 
-        JdbcCompanyDAOImpl companyDAO = new JdbcCompanyDAOImpl();
+        List<Integer> allCompanyIds = null;
         try {
-            Show.listAll(companyDAO.getAll());
+            List<Company> allCompanies = companyDAO.getAll();
+            Show.listAll(allCompanies);
+            allCompanyIds = Show.getIds(allCompanies);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         Company company = null;
         try {
-            company = companyDAO.getById(Input.getIntInput("Enter ID of company"));
+            company = companyDAO.getById(Input.getAllowedIntInput("Enter ID of company", allCompanyIds));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -85,14 +94,22 @@ public class Create {
         }
     }
 
-    public static void createProject(int lastId) {
+    public static void createProject(int lastId, CustomerDAO customerDAO) {
 
         int id = lastId + 1;
         String name = Input.getStringInputLimitNotNull(50, "Enter name");
         String description = Input.getStringInputLimitNotNull(100, "Enter description");
         BigDecimal cost = Input.getBigDecimalPositive("Enter cost");
 
-        Project project = new Project(id, name, description, cost);
+        Customer customer = null;
+        try {
+            Show.listAll(customerDAO.getAll());
+            customer = customerDAO.getById(Input.getPositiveIntInput("Enter ID of a customer"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Project project = new Project(id, name, description, cost, customer);
         ProjectDAO projectDAO = new JdbcProjectDAOImpl();
         try {
             System.out.println("Created new project:");
@@ -123,7 +140,7 @@ public class Create {
         String name = Input.getStringInputLimitNotNull(50, "Enter name");
         String description = Input.getStringInputLimitNotNull(100, "Enter description");
         String country = Input.getStringInputLimitNotNull(20, "Enter country");
-        Company company = new Company(id, name, description, country);
+        Company company = new Company(id, name, description, country, null);
         CompanyDAO companyDAO = new JdbcCompanyDAOImpl();
         try {
             System.out.println("Created new company:");
@@ -139,10 +156,11 @@ public class Create {
         String firstName = Input.getStringInputLimitNotNull(50, "Enter first name");
         String lastName = Input.getStringInputLimitNotNull(50, "Enter last name");
         String info = Input.getStringInputLimitNotNull(100, "Enter info");
-        Customer customer = new Customer(id, firstName, lastName, info);
+
+        Customer customer = new Customer(id, firstName, lastName, info, new ArrayList<Integer>());
         CustomerDAO customerDAO = new JdbcCustomerDAOImpl();
         try {
-            System.out.println("Created new company:");
+            System.out.println("Created new customer:");
             System.out.println(customer);
             customerDAO.save(customer);
         } catch (SQLException e) {

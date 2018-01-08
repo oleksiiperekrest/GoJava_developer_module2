@@ -2,17 +2,19 @@ package model;
 
 import java.math.BigDecimal;
 
-public class Project {
+public class Project extends Entity {
     private int id;
     private String name;
     private String description;
     private BigDecimal cost;
+    private Customer customer;
 
-    public Project(int id, String name, String description, BigDecimal cost) {
+    public Project(int id, String name, String description, BigDecimal cost, Customer customer) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.cost = cost;
+        this.customer = customer;
     }
 
     public int getId() {
@@ -47,6 +49,14 @@ public class Project {
         this.cost = cost;
     }
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
     @Override
     public String toString() {
         return "Project{" +
@@ -54,6 +64,7 @@ public class Project {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", cost=" + cost +
+                ", customer=" + customer +
                 '}';
     }
 }

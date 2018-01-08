@@ -22,8 +22,21 @@ public class JdbcCompanyDAOImpl implements CompanyDAO {
             String name = resultSet.getString("name");
             String description = resultSet.getString("description");
             String country = resultSet.getString("country");
-            return new Company(cId, name, description, country);
+            resultSet.close();
+
+            List<Integer> developerIds = new ArrayList<>();
+            String devSql = "select developer_id from developers_companies where company_id = " + id;
+            ResultSet devResultSet = statement.executeQuery(devSql);
+            while (devResultSet.next()) {
+                developerIds.add(devResultSet.getInt("developer_id"));
+            }
+            devResultSet.close();
+            statement.close();
+
+            return new Company(cId, name, description, country, developerIds);
         }
+        resultSet.close();
+        statement.close();
         return null;
     }
 
@@ -36,6 +49,8 @@ public class JdbcCompanyDAOImpl implements CompanyDAO {
         while (resultSet.next()) {
             compIds.add(resultSet.getInt("id"));
         }
+        resultSet.close();
+        statement.close();
         List<Company> companies = new ArrayList<>();
         for (Integer i : compIds) {
             companies.add(getById(i));
@@ -48,12 +63,24 @@ public class JdbcCompanyDAOImpl implements CompanyDAO {
         try
                 (Statement statement = ConnectionUtil.getConnection().createStatement())
         {
+            int companyId = company.getId();
             String sql = "insert into companies values ('" +
-                    company.getId() + "', '" +
+                    companyId + "', '" +
                     company.getName() + "', '" +
                     company.getDescription() + "', '" +
                     company.getCountry() + "')";
-            statement.execute(sql);
+            statement.addBatch(sql);
+            if (company.getDeveloperIds().size() > 0) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("insert into developers_companies values ");
+                List<Integer> developerIds = company.getDeveloperIds();
+                for (Integer id : developerIds) {
+                    stringBuilder.append("('").append(id).append("', '").append(companyId).append("'),");
+                }
+                stringBuilder.setLength(stringBuilder.length() - 1);
+                statement.addBatch(stringBuilder.toString());
+                statement.executeBatch();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

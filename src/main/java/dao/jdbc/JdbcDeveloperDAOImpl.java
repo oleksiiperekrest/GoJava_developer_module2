@@ -1,12 +1,12 @@
 package dao.jdbc;
 
-import dao.ConnectionUtil;
-import dao.DeveloperDAO;
+import dao.*;
 import model.Company;
 import model.Developer;
 import model.Project;
 import model.Skill;
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,7 +17,10 @@ public class JdbcDeveloperDAOImpl implements DeveloperDAO {
     @Override
     public Developer getById(Integer id) {
         try
-                (Statement statement = ConnectionUtil.getConnection().createStatement())
+                (
+                        Connection connection = ConnectionUtil.getConnection();
+                        Statement statement = connection.createStatement()
+                )
         {
             String sql = "select * from developers where id = " + id;
 
@@ -33,9 +36,10 @@ public class JdbcDeveloperDAOImpl implements DeveloperDAO {
                 String skillSql = "select s.id from skills s, developers_skills ds where s.id = ds.skill_id " +
                         "and ds.developer_id = " + devId;
                 ResultSet sResultSet = statement.executeQuery(skillSql);
+                SkillDAO skillDAO = new JdbcSkillDAOImpl();
                 while (sResultSet.next()) {
                     int sId = sResultSet.getInt("id");
-                    skills.add(new JdbcSkillDAOImpl().getById(sId));
+                    skills.add(skillDAO.getById(sId));
                 }
                 resultSet.close();
 
@@ -43,9 +47,10 @@ public class JdbcDeveloperDAOImpl implements DeveloperDAO {
                 String projectSql = "select p.id from projects p, projects_developers pd where p.id = pd.project_id " +
                         "and pd.developer_id =  " + devId;
                 ResultSet pResultSet = statement.executeQuery(projectSql);
+                ProjectDAO projectDAO = new JdbcProjectDAOImpl();
                 while (pResultSet.next()) {
                     int pId = pResultSet.getInt("id");
-                    projects.add(new JdbcProjectDAOImpl().getById(pId));
+                    projects.add(projectDAO.getById(pId));
                 }
                 pResultSet.close();
 
@@ -53,12 +58,15 @@ public class JdbcDeveloperDAOImpl implements DeveloperDAO {
                 String companySql = "select c.id from companies c, developers_companies dc where c.id = dc.company_id " +
                         "and dc.developer_id = " + devId;
                 ResultSet cResultSet = statement.executeQuery(companySql);
+                CompanyDAO companyDAO = new JdbcCompanyDAOImpl();
                 if (cResultSet.next()) {
                     int cId = cResultSet.getInt("id");
-                    company = new JdbcCompanyDAOImpl().getById(cId);
+                    company = companyDAO.getById(cId);
                 }
                 cResultSet.close();
-
+                resultSet.close();
+                statement.close();
+                connection.close();
                 return new Developer()
                         .withId(devId)
                         .withFirstName(firstName)
@@ -68,6 +76,7 @@ public class JdbcDeveloperDAOImpl implements DeveloperDAO {
                         .withProjects(projects)
                         .withCompany(company);
             }
+            resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -83,6 +92,8 @@ public class JdbcDeveloperDAOImpl implements DeveloperDAO {
         while (resultSet.next()) {
             devIds.add(resultSet.getInt("id"));
         }
+        resultSet.close();
+        statement.close();
         List<Developer> developers = new ArrayList<>();
         for (Integer i : devIds) {
             developers.add(getById(i));
@@ -93,8 +104,7 @@ public class JdbcDeveloperDAOImpl implements DeveloperDAO {
     @Override
     public void save(Developer developer) {
         try
-                (Statement statement = ConnectionUtil.getConnection().createStatement())
-        {
+                (Statement statement = ConnectionUtil.getConnection().createStatement()) {
             int id = developer.getId();
 
             statement.addBatch("insert into developers values ('" +
@@ -110,11 +120,12 @@ public class JdbcDeveloperDAOImpl implements DeveloperDAO {
                         skill.getId() + "')");
             }
 
+            if (developer.getProjects() != null) {
             for (Project project : developer.getProjects()) {
                 statement.addBatch("insert into projects_developers values ('" + project.getId() + "', '" +
                         id + "')");
             }
-
+        }
             statement.executeBatch();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -6,6 +6,7 @@ import view.Menu;
 import view.Show;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Edit {
@@ -31,13 +32,19 @@ public class Edit {
                     break;
                 case 5:
                     try {
-                        List<Skill> skills = skillDAO.getAll();
-                        Show.listAll(skills);
-                        List<Integer> skillIds = Input.getIntegerList("Enter ID's of skills");
-                        skills.clear();
-                        for (Integer skillId : skillIds) {
-                            skills.add(skillDAO.getById(skillId));
+                        List<Skill> allSkills = skillDAO.getAll();
+                        Show.listAll(allSkills);
+                        List<Integer> allSkillIds = Show.getIds(allSkills);
+                        allSkillIds.add(0);
+                        List<Integer> skillIds = Input.getAllowedIntegerList("Enter ID's of skills", allSkillIds);
+                        List<Skill> skills = new ArrayList<>();
+                        if (!(skillIds.size() == 1 && skillIds.get(0) == 0)) {
+                            if (skillIds.contains(0)) skillIds.remove(new Integer(0));
+                            for (Integer skillId : skillIds) {
+                                skills.add(skillDAO.getById(skillId));
+                            }
                         }
+
                         developer.setSkills(skills);
                     } catch (SQLException e) {
                         e.printStackTrace();
@@ -46,12 +53,21 @@ public class Edit {
                     break;
                 case 6:
                     try {
-                        List<Project> projects = projectDAO.getAll();
-                        Show.listAll(projects);
-                        List<Integer> projectIds = Input.getIntegerList("Enter ID's of projects");
-                        projects.clear();
-                        for (Integer projectId : projectIds) {
-                            projects.add(projectDAO.getById(projectId));
+                        List<Project> allProjects = projectDAO.getAll();
+                        Show.listAll(allProjects);
+                        List<Integer> allProjectIds = Show.getIds(allProjects);
+                        allProjectIds.add(0);
+                        List<Integer> projectIds = Input.getAllowedIntegerList("Enter ID's of projects", allProjectIds);
+                        List<Project> projects = new ArrayList<>();
+                        if (!(projectIds.size() == 1 && projectIds.get(0) == 0)) {
+                            if (projectIds.contains(0)) projectIds.remove(new Integer(0));
+                            for (Integer id : projectIds) {
+                                try {
+                                    projects.add(projectDAO.getById(id));
+                                } catch (SQLException | NullPointerException e) {
+                                    e.printStackTrace();
+                                }
+                            }
                         }
                         developer.setProjects(projects);
                     } catch (SQLException e) {
@@ -83,7 +99,7 @@ public class Edit {
 
     }
 
-    public static void editProject(Project project, ProjectDAO projectDAO) {
+    public static void editProject(Project project, ProjectDAO projectDAO, CustomerDAO customerDAO) {
         System.out.println(project);
         int menuCount = Menu.editMenu(project.getClass());
         int choice = Input.getBoundIntInput("", 0, menuCount);
@@ -102,9 +118,17 @@ public class Edit {
                     project.setCost(Input.getBigDecimalPositive("Enter new cost"));
                     break;
                 case 5:
+                    try {
+                        List<Customer> customers = customerDAO.getAll();
+                        Show.listAll(customers);
+                        project.setCustomer(customerDAO.getById(Input.getPositiveIntInput("Enter ID of a customer")));
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                case 6:
                     System.out.println(project);
                     break;
-                case 6:
+                case 7:
                     Save.saveProject(project, projectDAO);
             }
             Menu.editMenu(project.getClass());
@@ -152,10 +176,14 @@ public class Edit {
                     break;
                 case 4:
                     company.setCountry(Input.getStringInputLimitNotNull(20, "Enter new country"));
+                    break;
                 case 5:
-                    System.out.println(company);
+                    System.out.println("You cannot edit developers from here, Company for every Developer is set in Developer.");
                     break;
                 case 6:
+                    System.out.println(company);
+                    break;
+                case 7:
                     Save.saveCompany(company, companyDAO);
             }
             Menu.editMenu(company.getClass());
@@ -164,7 +192,7 @@ public class Edit {
 
     }
 
-    public static void editCustomer(Customer customer, CustomerDAO customerDAO) {
+    public static void editCustomer(Customer customer, CustomerDAO customerDAO, ProjectDAO projectDAO) {
         System.out.println(customer);
         int menuCount = Menu.editMenu(customer.getClass());
         int choice = Input.getBoundIntInput("", 0, menuCount);
@@ -183,9 +211,12 @@ public class Edit {
                     customer.setInfo(Input.getStringInputLimitNotNull(100, "Enter new info"));
                     break;
                 case 5:
-                    System.out.println(customer);
+                    System.out.println("You cannot edit projects from here, Customer for every Project is set in Project.");
                     break;
                 case 6:
+                    System.out.println(customer);
+                    break;
+                case 7:
                     Save.saveCustomer(customer, customerDAO);
             }
             Menu.editMenu(customer.getClass());

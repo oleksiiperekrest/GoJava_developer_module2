@@ -1,17 +1,21 @@
 package model;
 
-public class Customer {
+import java.util.List;
+
+public class Customer extends Entity {
     private int id;
     private String firstName;
     private String lastName;
     private String info;
+    private List<Integer> projectIds;
 
-    public Customer(int id, String firstName, String lastName, String info) {
+    public Customer(int id, String firstName, String lastName, String info, List<Integer> projectIds) {
 
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.info = info;
+        this.projectIds = projectIds;
     }
 
     public int getId() {
@@ -46,6 +50,14 @@ public class Customer {
         this.info = info;
     }
 
+    public List<Integer> getProjectIds() {
+        return projectIds;
+    }
+
+    public void setProjectIds(List<Integer> projectIds) {
+        this.projectIds = projectIds;
+    }
+
     @Override
     public String toString() {
         return "Customer{" +
@@ -53,6 +65,7 @@ public class Customer {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", info='" + info + '\'' +
+                ", projectIds=" + projectIds +
                 '}';
     }
 }

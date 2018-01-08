@@ -1,16 +1,20 @@
 package model;
 
-public class Company {
+import java.util.List;
+
+public class Company extends Entity {
     private int id;
     private String name;
     private String description;
     private String country;
+    private List<Integer> developerIds;
 
-    public Company(int id, String name, String description, String country) {
+    public Company(int id, String name, String description, String country, List<Integer> developerIds) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.country = country;
+        this.developerIds = developerIds;
     }
 
     public int getId() {
@@ -45,13 +49,22 @@ public class Company {
         this.country = country;
     }
 
+    public List<Integer> getDeveloperIds() {
+        return developerIds;
+    }
+
+    public void setDeveloperIds(List<Integer> developerIds) {
+        this.developerIds = developerIds;
+    }
+
     @Override
     public String toString() {
         return "Company{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", country='" + country + '\'' +
                 ", description='" + description + '\'' +
+                ", country='" + country + '\'' +
+                ", developerIds=" + developerIds +
                 '}';
     }
 }

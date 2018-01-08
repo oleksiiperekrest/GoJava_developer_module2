@@ -3,6 +3,8 @@ package dao.jdbc;
 import dao.ConnectionUtil;
 import dao.SkillDAO;
 import model.Skill;
+
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,8 +13,14 @@ import java.util.List;
 
 public class JdbcSkillDAOImpl implements SkillDAO {
     @Override
-    public Skill getById(Integer id) throws SQLException {
-        Statement statement = ConnectionUtil.getConnection().createStatement();
+    public Skill getById(Integer id){
+
+        try
+                (
+                        Connection connection = ConnectionUtil.getConnection();
+                        Statement statement = connection.createStatement()
+                )
+        {
         String sql = "select * from skills where id = " + id;
 
         ResultSet resultSet = statement.executeQuery(sql);
@@ -20,8 +28,14 @@ public class JdbcSkillDAOImpl implements SkillDAO {
         if (resultSet.next()) {
             int sId = resultSet.getInt("id");
             String description = resultSet.getString("description");
+            resultSet.close();
+            statement.close();
+            connection.close();
             return new Skill(sId, description);
         }
+        } catch (SQLException e) {
+        e.printStackTrace();
+    }
         return null;
     }
 
@@ -34,6 +48,8 @@ public class JdbcSkillDAOImpl implements SkillDAO {
         while (resultSet.next()) {
             skillIds.add(resultSet.getInt("id"));
         }
+        resultSet.close();
+        statement.close();
         List<Skill> skills = new ArrayList<>();
         for (Integer i : skillIds) {
             skills.add(getById(i));
