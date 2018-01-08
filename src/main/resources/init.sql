@@ -1,4 +1,4 @@
-create database homework1;
+create schema homework1;
 USE homework1;
 
 CREATE TABLE developers (
