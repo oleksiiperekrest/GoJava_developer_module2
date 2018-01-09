@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Controller {
-    public void run() throws SQLException {
+    public static void run() throws SQLException {
         DeveloperDAO developerDAO = new JdbcDeveloperDAOImpl();
         ProjectDAO projectDAO = new JdbcProjectDAOImpl();
         SkillDAO skillDAO = new JdbcSkillDAOImpl();
@@ -77,7 +77,7 @@ public class Controller {
                                 developers = developerDAO.getAll();
                                 break;
                             case 2:
-                                Create.createProject(projects.get(projects.size() - 1).getId(), customerDAO);
+                                Create.createProject(projects.get(projects.size() - 1).getId(), customerDAO, developerDAO);
                                 projects = projectDAO.getAll();
                                 break;
                             case 3:
@@ -110,7 +110,7 @@ public class Controller {
                                 while (project == null) {
                                     project = projectDAO.getById(Input.getIntInput("ID not found, please re-enter!"));
                                 }
-                                Edit.editProject(project, projectDAO, customerDAO);
+                                Edit.editProject(project, projectDAO, customerDAO, developerDAO);
                                 projects = projectDAO.getAll();
                                 break;
                             case 3:

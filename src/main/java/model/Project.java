@@ -1,6 +1,7 @@
 package model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class Project extends Entity {
     private int id;
@@ -8,13 +9,15 @@ public class Project extends Entity {
     private String description;
     private BigDecimal cost;
     private Customer customer;
+    private List<Integer> developerIds;
 
-    public Project(int id, String name, String description, BigDecimal cost, Customer customer) {
+    public Project(int id, String name, String description, BigDecimal cost, Customer customer, List<Integer> developerIds) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.cost = cost;
         this.customer = customer;
+        this.developerIds = developerIds;
     }
 
     public int getId() {
@@ -57,6 +60,14 @@ public class Project extends Entity {
         this.customer = customer;
     }
 
+    public List<Integer> getDeveloperIds() {
+        return developerIds;
+    }
+
+    public void setDeveloperIds(List<Integer> developerIds) {
+        this.developerIds = developerIds;
+    }
+
     @Override
     public String toString() {
         return "Project{" +
@@ -65,6 +76,7 @@ public class Project extends Entity {
                 ", description='" + description + '\'' +
                 ", cost=" + cost +
                 ", customer=" + customer +
+                ", developerIds=" + developerIds +
                 '}';
     }
 }

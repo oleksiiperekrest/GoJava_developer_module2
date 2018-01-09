@@ -36,9 +36,15 @@ public class JdbcProjectDAOImpl implements ProjectDAO {
                     customer = new JdbcCustomerDAOImpl().getById(cusId);
                 }
                 customerResultSet.close();
-                resultSet.close();
-                connection.close();
-                return new Project(pId, name, description, cost, customer);
+
+                String projSql = "select developer_id from projects_developers where project_id = " + id;
+                ResultSet projResultSet = statement.executeQuery(projSql);
+                List<Integer> projectIds = new ArrayList<>();
+                while (projResultSet.next()) {
+                    projectIds.add(projResultSet.getInt("developer_id"));
+                }
+
+                return new Project(pId, name, description, cost, customer, projectIds);
             }
             resultSet.close();
             return null;
@@ -103,14 +109,28 @@ public class JdbcProjectDAOImpl implements ProjectDAO {
     public void save(Project project) {
         try
                 (Statement statement = ConnectionUtil.getConnection().createStatement()) {
+            int id = project.getId();
             String sql = "insert into projects values ('" +
-                    project.getId() + "', '" +
+                    id + "', '" +
                     project.getName() + "', '" +
                     project.getDescription() + "', '" +
                     project.getCost() + "')";
             statement.addBatch(sql);
+
             sql = "insert into customers_projects values ('" + project.getCustomer().getId() + "', '" + project.getId() + "')";
             statement.addBatch(sql);
+
+            if (project.getDeveloperIds().size() > 0) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("insert into projects_developers values ");
+                List<Integer> developerIds = project.getDeveloperIds();
+                for (Integer devId : developerIds) {
+                    stringBuilder.append("('").append(id).append("', '").append(devId).append("'),");
+                }
+                stringBuilder.setLength(stringBuilder.length() - 1);
+                statement.addBatch(stringBuilder.toString());
+            }
+
             statement.executeBatch();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -94,7 +94,7 @@ public class Create {
         }
     }
 
-    public static void createProject(int lastId, CustomerDAO customerDAO) {
+    public static void createProject(int lastId, CustomerDAO customerDAO, DeveloperDAO developerDAO) {
 
         int id = lastId + 1;
         String name = Input.getStringInputLimitNotNull(50, "Enter name");
@@ -109,7 +109,22 @@ public class Create {
             e.printStackTrace();
         }
 
-        Project project = new Project(id, name, description, cost, customer);
+        List<Integer> allDeveloperIds = null;
+        try {
+            List<Developer> developers = developerDAO.getAll();
+            Show.listAll(developers);
+            allDeveloperIds = Show.getIds(developers);
+            allDeveloperIds.add(0);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        List<Integer> developerIds = Input.getAllowedIntegerList("Enter IDs of developers", allDeveloperIds);
+        if (!(developerIds.size() == 1 && developerIds.get(0) == 0)) {
+            if(developerIds.contains(0)) developerIds.remove(new Integer(0));
+        }
+        else developerIds.clear();
+
+        Project project = new Project(id, name, description, cost, customer, developerIds);
         ProjectDAO projectDAO = new JdbcProjectDAOImpl();
         try {
             System.out.println("Created new project:");

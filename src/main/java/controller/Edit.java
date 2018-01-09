@@ -99,7 +99,7 @@ public class Edit {
 
     }
 
-    public static void editProject(Project project, ProjectDAO projectDAO, CustomerDAO customerDAO) {
+    public static void editProject(Project project, ProjectDAO projectDAO, CustomerDAO customerDAO, DeveloperDAO developerDAO) {
         System.out.println(project);
         int menuCount = Menu.editMenu(project.getClass());
         int choice = Input.getBoundIntInput("", 0, menuCount);
@@ -121,14 +121,33 @@ public class Edit {
                     try {
                         List<Customer> customers = customerDAO.getAll();
                         Show.listAll(customers);
-                        project.setCustomer(customerDAO.getById(Input.getPositiveIntInput("Enter ID of a customer")));
+                        List<Integer> allCustomerIds = Show.getIds(customers);
+                        project.setCustomer(customerDAO.getById(Input.getAllowedIntInput("Enter ID of a customer", allCustomerIds)));
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                case 6:
+                    break;
+                case 6: //edit developers
+                        ////////
+                    List<Developer> developers;
+                    try {
+                        developers = developerDAO.getAll();
+                        Show.listAll(developers);
+                        List<Integer> allDeveloperIds = Show.getIds(developers);
+                        allDeveloperIds.add(0);
+                        List<Integer> developerIds = Input.getAllowedIntegerList("Enter IDs of developers", allDeveloperIds);
+                        if (!(developerIds.size() == 1 && developerIds.get(0) == 0)) {
+                            if(developerIds.contains(0)) developerIds.remove(new Integer(0));
+                        }
+                        else developerIds.clear();
+                        project.setDeveloperIds(developerIds);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                case 7:
                     System.out.println(project);
                     break;
-                case 7:
+                case 8:
                     Save.saveProject(project, projectDAO);
             }
             Menu.editMenu(project.getClass());

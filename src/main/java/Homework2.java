@@ -36,7 +36,7 @@ import java.sql.SQLException;
 public class Homework2 {
     public static void main(String[] args) {
         try {
-            new Controller().run();
+            Controller.run();
         } catch (SQLException e) {
             e.printStackTrace();
         }
