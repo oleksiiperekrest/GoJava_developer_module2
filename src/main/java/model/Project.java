@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class Project extends Entity {
-
+    private int id;
     private String name;
     private String description;
     private BigDecimal cost;

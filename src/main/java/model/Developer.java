@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class Developer extends Entity {
-
-private String firstName;
-private String lastName;
-private BigDecimal salary;
-private List<Skill> skills;
-private List<Project> projects;
-private Company company;
+    private int id;
+    private String firstName;
+    private String lastName;
+    private BigDecimal salary;
+    private List<Skill> skills;
+    private List<Project> projects;
+    private Company company;
 
     public Developer() {
     }

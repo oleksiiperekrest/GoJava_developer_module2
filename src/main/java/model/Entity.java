@@ -1,7 +1,7 @@
 package model;
 
 public abstract class Entity {
-    int id;
+    private int id;
 
     public int getId() {
         return id;

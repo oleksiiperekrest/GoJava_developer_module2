@@ -127,8 +127,7 @@ public class Edit {
                         e.printStackTrace();
                     }
                     break;
-                case 6: //edit developers
-                        ////////
+                case 6:
                     List<Developer> developers;
                     try {
                         developers = developerDAO.getAll();

@@ -37,14 +37,14 @@ public class JdbcProjectDAOImpl implements ProjectDAO {
                 }
                 customerResultSet.close();
 
-                String projSql = "select developer_id from projects_developers where project_id = " + id;
-                ResultSet projResultSet = statement.executeQuery(projSql);
-                List<Integer> projectIds = new ArrayList<>();
-                while (projResultSet.next()) {
-                    projectIds.add(projResultSet.getInt("developer_id"));
+                String devSql = "select developer_id from projects_developers where project_id = " + id;
+                ResultSet devResultSet = statement.executeQuery(devSql);
+                List<Integer> devIds = new ArrayList<>();
+                while (devResultSet.next()) {
+                    devIds.add(devResultSet.getInt("developer_id"));
                 }
 
-                return new Project(pId, name, description, cost, customer, projectIds);
+                return new Project(pId, name, description, cost, customer, devIds);
             }
             resultSet.close();
             return null;
@@ -100,8 +100,6 @@ public class JdbcProjectDAOImpl implements ProjectDAO {
         for (Integer i : projIds) {
             projects.add(getById(i));
         }
-        resultSet.close();
-        statement.close();
         return projects;
     }
 
