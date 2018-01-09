@@ -41,6 +41,4 @@ public class Homework2 {
             e.printStackTrace();
         }
     }
-
-
 }

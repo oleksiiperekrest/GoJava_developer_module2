@@ -3,7 +3,7 @@ package model;
 import java.util.List;
 
 public class Company extends Entity {
-    private int id;
+
     private String name;
     private String description;
     private String country;
@@ -15,14 +15,6 @@ public class Company extends Entity {
         this.description = description;
         this.country = country;
         this.developerIds = developerIds;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
