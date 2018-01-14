@@ -3,7 +3,6 @@ package model;
 import java.util.List;
 
 public class Customer extends Entity {
-    private int id;
     private String firstName;
     private String lastName;
     private String info;

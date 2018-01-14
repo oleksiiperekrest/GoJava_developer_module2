@@ -1,7 +1,7 @@
 package model;
 
 public class Skill extends Entity {
-    private int id;
+
     private String description;
 
     public Skill(int id, String description) {

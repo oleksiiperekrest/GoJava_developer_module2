@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class Developer extends Entity {
-    private int id;
     private String firstName;
     private String lastName;
     private BigDecimal salary;
@@ -59,13 +58,7 @@ public class Developer extends Entity {
         this.company = company;
         return this;
     }
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
     public String getFirstName() {
         return firstName;
     }

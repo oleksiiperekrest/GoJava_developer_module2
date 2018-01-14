@@ -1,6 +1,10 @@
 package view;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class Menu
 {
@@ -38,11 +42,16 @@ public class Menu
         return i+2;
     }
 
-    public static String[] classFieldsNames(Class clazz) {
-        Field[] fields = clazz.getDeclaredFields();
-        String[] stringFields = new String[fields.length];
-        for (int i = 0; i < fields.length; i++) {
-            String raw = fields[i].getName();
+    private static String[] classFieldsNames(Class clazz) {
+        Field[] superFields = clazz.getSuperclass().getDeclaredFields(); //get filed(s) of Entity
+        Field[] classFields = clazz.getDeclaredFields(); //get fields of class
+        List<Field> fields = new ArrayList<>();
+        fields.addAll(Arrays.asList(superFields));
+        fields.addAll(Arrays.asList(classFields));
+
+        String[] stringFields = new String[fields.size()];
+        for (int i = 0; i < fields.size(); i++) {
+            String raw = fields.get(i).getName();
             String[] camelCaseWords = raw.split("(?=[A-Z])");
             StringBuilder stringBuilder = new StringBuilder();
             for (String s : camelCaseWords) {

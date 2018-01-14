@@ -103,8 +103,10 @@ public class Create {
 
         Customer customer = null;
         try {
-            Show.listAll(customerDAO.getAll());
-            customer = customerDAO.getById(Input.getPositiveIntInput("Enter ID of a customer"));
+            List<Customer> allCustomers = customerDAO.getAll();
+            Show.listAll(allCustomers);
+            List<Integer> allCustomerIds = Show.getIds(allCustomers);
+            customer = customerDAO.getById(Input.getAllowedIntInput("Enter ID of a customer", allCustomerIds));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -120,7 +122,7 @@ public class Create {
         }
         List<Integer> developerIds = Input.getAllowedIntegerList("Enter IDs of developers", allDeveloperIds);
         if (!(developerIds.size() == 1 && developerIds.get(0) == 0)) {
-            if(developerIds.contains(0)) developerIds.remove(new Integer(0));
+            if (developerIds.contains(0)) developerIds.remove(new Integer(0));
         }
         else developerIds.clear();
 
