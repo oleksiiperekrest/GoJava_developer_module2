@@ -1,7 +1,5 @@
 package view;
 
-import model.Entity;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
