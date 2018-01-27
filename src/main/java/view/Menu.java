@@ -79,4 +79,13 @@ public class Menu
         }
         return stringFields;
     }
+
+    public static int selectDAOMenu() {
+        System.out.println("Please select which DAO method to use:");
+        int i = 1;
+        System.out.println(i + ". JDBC");
+        i++;
+        System.out.println(i + ". Hibernate");
+        return i;
+    }
 }

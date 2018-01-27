@@ -4,6 +4,7 @@ import controller.services.Create;
 import controller.services.Delete;
 import controller.services.Edit;
 import dao.*;
+import dao.hibernate.*;
 import dao.jdbc.*;
 import model.*;
 import utils.Input;
@@ -11,15 +12,16 @@ import view.Menu;
 import view.Show;
 
 import java.sql.SQLException;
-import java.util.List;
+import java.util.*;
 
 public class Controller {
     public static void run() throws SQLException {
-        DeveloperDAO developerDAO = new JdbcDeveloperDAOImpl();
-        ProjectDAO projectDAO = new JdbcProjectDAOImpl();
-        SkillDAO skillDAO = new JdbcSkillDAOImpl();
-        CompanyDAO companyDAO = new JdbcCompanyDAOImpl();
-        CustomerDAO customerDAO = new JdbcCustomerDAOImpl();
+        Map<String,GenericDAO> DAOs = getDAOs();
+        DeveloperDAO developerDAO = (DeveloperDAO) DAOs.get("Developer");
+        ProjectDAO projectDAO = (ProjectDAO) DAOs.get("Project");
+        SkillDAO skillDAO = (SkillDAO) DAOs.get("Skill");
+        CompanyDAO companyDAO = (CompanyDAO) DAOs.get("Company");
+        CustomerDAO customerDAO = (CustomerDAO) DAOs.get("Customer");
 
         List<Developer> developers = null;
         List<Project> projects = null;
@@ -192,4 +194,29 @@ public class Controller {
             }
         }
     }
+
+    private static Map<String, GenericDAO> getDAOs() {
+        Map<String,GenericDAO> DAOs = new HashMap<>();
+        int menuCount = Menu.selectDAOMenu();
+        int userDAOChoice = Input.getBoundIntInput("Choose DAO method to use:", 1, menuCount);
+        switch (userDAOChoice) {
+            case 1: //JDBC
+                DAOs.put("Company", new JdbcCompanyDAOImpl());
+                DAOs.put("Customer", new JdbcCustomerDAOImpl());
+                DAOs.put("Developer", new JdbcDeveloperDAOImpl());
+                DAOs.put("Project", new JdbcProjectDAOImpl());
+                DAOs.put("Skill", new JdbcSkillDAOImpl());
+                break;
+            case 2: //Hibernate
+                DAOs.put("Company", new HibernateCompanyDAOImpl());
+                DAOs.put("Customer", new HibernateCustomerDAOImpl());
+                DAOs.put("Developer", new HibernateDeveloperDAOImpl());
+                DAOs.put("Project", new HibernateProjectDAOImpl());
+                DAOs.put("Skill", new HibernateSkillDAOImpl());
+                break;
+        }
+
+        return DAOs;
+    }
 }
+
