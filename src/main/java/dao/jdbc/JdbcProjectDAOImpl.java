@@ -56,36 +56,6 @@ public class JdbcProjectDAOImpl implements ProjectDAO {
     }
 
     @Override
-    public int getColumnSize(String column) throws SQLException {
-        Connection connection = ConnectionUtil.getConnection();
-
-        DatabaseMetaData databaseMetaData = connection.getMetaData();
-        ResultSet rsColumns = databaseMetaData.getColumns(null, null, "projects", column);
-        int size = 0;
-        while (rsColumns.next()) {
-            String columnName = rsColumns.getString("COLUMN_NAME");
-            System.out.println("column name=" + columnName);
-            String columnType = rsColumns.getString("TYPE_NAME");
-            System.out.println("type:" + columnType);
-            size = rsColumns.getInt("COLUMN_SIZE");
-            System.out.println("size:" + size);
-            int nullable = rsColumns.getInt("NULLABLE");
-            if (nullable == DatabaseMetaData.columnNullable) {
-                System.out.println("nullable true");
-            } else {
-                System.out.println("nullable false");
-            }
-            int position = rsColumns.getInt("ORDINAL_POSITION");
-            System.out.println("position:" + position);
-
-        }
-        rsColumns.close();
-        connection.close();
-        return size;
-    }
-
-
-    @Override
     public List<Project> getAll() throws SQLException {
         Statement statement = ConnectionUtil.getConnection().createStatement();
         String sql = "select id from projects";
