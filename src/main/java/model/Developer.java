@@ -1,14 +1,38 @@
 package model;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+@javax.persistence.Entity
+@Table(name = "developers")
 public class Developer extends Entity {
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "salary")
     private BigDecimal salary;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "developers_skills",
+            joinColumns = @JoinColumn(name="developer_id"),
+            inverseJoinColumns = @JoinColumn(name="skill_id"))
     private List<Skill> skills;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "projects_developers",
+            joinColumns = @JoinColumn(name="developer_id"),
+            inverseJoinColumns = @JoinColumn(name="project_id"))
     private List<Project> projects;
+
+    @OneToOne
+    @JoinTable(name = "developers_companies",
+            joinColumns = @JoinColumn(name="developer_id"),
+            inverseJoinColumns = @JoinColumn(name="company_id"))
     private Company company;
 
     public Developer() {

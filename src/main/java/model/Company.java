@@ -1,12 +1,30 @@
 package model;
 
+import jdk.nashorn.internal.ir.annotations.Ignore;
+
+import javax.persistence.*;
 import java.util.List;
 
+@javax.persistence.Entity
+@Table(name = "companies")
 public class Company extends Entity {
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "country")
     private String country;
+
+    @ElementCollection
+    @CollectionTable(name="developers_companies", joinColumns=@JoinColumn(name="company_id"))
+    @Column(name="developer_id")
     private List<Integer> developerIds;
+
+    public Company() {
+    }
 
     public Company(int id, String name, String description, String country, List<Integer> developerIds) {
         this.id = id;

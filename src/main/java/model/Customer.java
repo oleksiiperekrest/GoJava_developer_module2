@@ -1,15 +1,30 @@
 package model;
 
+import javax.persistence.*;
 import java.util.List;
 
+@javax.persistence.Entity
+@Table(name = "customers")
 public class Customer extends Entity {
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
+    @Column(name = "info")
     private String info;
+
+    @ElementCollection
+    @CollectionTable(name="customers_projects", joinColumns=@JoinColumn(name="customer_id"))
+    @Column(name="project_id")
     private List<Integer> projectIds;
 
-    public Customer(int id, String firstName, String lastName, String info, List<Integer> projectIds) {
+    public Customer() {
+    }
 
+    public Customer(int id, String firstName, String lastName, String info, List<Integer> projectIds) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
