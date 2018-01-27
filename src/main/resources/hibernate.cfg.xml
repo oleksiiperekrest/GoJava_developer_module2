@@ -10,6 +10,7 @@
         </property>
         <property name="hibernate.connection.username">simuran</property>
         <property name="hibernate.connection.password">my1111</property>
+        <property name="hibernate.enable_lazy_load_no_trans">true</property>
 
         <!--<mapping resource="Developer.hbm.xml"/>-->
         <mapping class="model.Company"/>
