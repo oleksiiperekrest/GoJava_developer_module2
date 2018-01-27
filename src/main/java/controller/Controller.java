@@ -77,23 +77,23 @@ public class Controller {
                     case 2:
                         switch (tableSelect) {
                             case 1:
-                                Create.createDeveloper(developers.get(developers.size() - 1).getId(), skillDAO, projectDAO, companyDAO);
+                                Create.createDeveloper(developers.get(developers.size() - 1).getId(), developerDAO, skillDAO, projectDAO, companyDAO);
                                 developers = developerDAO.getAll();
                                 break;
                             case 2:
-                                Create.createProject(projects.get(projects.size() - 1).getId(), customerDAO, developerDAO);
+                                Create.createProject(projects.get(projects.size() - 1).getId(), projectDAO, customerDAO, developerDAO);
                                 projects = projectDAO.getAll();
                                 break;
                             case 3:
-                                Create.createSkill(skills.get(skills.size() - 1).getId());
+                                Create.createSkill(skills.get(skills.size() - 1).getId(), skillDAO);
                                 skills = skillDAO.getAll();
                                 break;
                             case 4:
-                                Create.createCompany(companies.get(companies.size() - 1).getId());
+                                Create.createCompany(companies.get(companies.size() - 1).getId(), companyDAO);
                                 companies = companyDAO.getAll();
                                 break;
                             case 5:
-                                Create.createCustomer(customers.get(customers.size() - 1).getId());
+                                Create.createCustomer(customers.get(customers.size() - 1).getId(), customerDAO);
                                 customers = customerDAO.getAll();
                                 break;
                         }

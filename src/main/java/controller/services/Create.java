@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Create {
 
-    public static void createDeveloper(int lastId, SkillDAO skillDAO, ProjectDAO projectDAO, CompanyDAO companyDAO) {
+    public static void createDeveloper(int lastId, DeveloperDAO developerDAO, SkillDAO skillDAO, ProjectDAO projectDAO, CompanyDAO companyDAO) {
         Developer developer = new Developer();
 
         developer.withId(lastId + 1);
@@ -84,7 +84,6 @@ public class Create {
         }
         developer.withCompany(company);
 
-        DeveloperDAO developerDAO = new JdbcDeveloperDAOImpl();
         try {
             System.out.println("Created new developer:");
             System.out.println(developer);
@@ -95,7 +94,7 @@ public class Create {
         }
     }
 
-    public static void createProject(int lastId, CustomerDAO customerDAO, DeveloperDAO developerDAO) {
+    public static void createProject(int lastId, ProjectDAO projectDAO, CustomerDAO customerDAO, DeveloperDAO developerDAO) {
 
         int id = lastId + 1;
         String name = Input.getStringInputLimitNotNull(50, "Enter name");
@@ -128,7 +127,7 @@ public class Create {
         else developerIds.clear();
 
         Project project = new Project(id, name, description, cost, customer, developerIds);
-        ProjectDAO projectDAO = new JdbcProjectDAOImpl();
+
         try {
             System.out.println("Created new project:");
             System.out.println(project);
@@ -138,12 +137,12 @@ public class Create {
         }
     }
 
-    public static void createSkill(int lastId) {
+    public static void createSkill(int lastId, SkillDAO skillDAO) {
         int id = lastId + 1;
         String description = Input.getStringInputLimitNotNull(100, "Enter description");
 
         Skill skill = new Skill(id, description);
-        SkillDAO skillDAO = new JdbcSkillDAOImpl();
+
         try {
             System.out.println("Created new skill:");
             System.out.println(skill);
@@ -153,13 +152,13 @@ public class Create {
         }
     }
 
-    public static void createCompany(int lastId) {
+    public static void createCompany(int lastId, CompanyDAO companyDAO) {
         int id = lastId + 1;
         String name = Input.getStringInputLimitNotNull(50, "Enter name");
         String description = Input.getStringInputLimitNotNull(100, "Enter description");
         String country = Input.getStringInputLimitNotNull(20, "Enter country");
         Company company = new Company(id, name, description, country, null);
-        CompanyDAO companyDAO = new JdbcCompanyDAOImpl();
+
         try {
             System.out.println("Created new company:");
             System.out.println(company);
@@ -169,14 +168,14 @@ public class Create {
         }
     }
 
-    public static void createCustomer(int lastId) {
+    public static void createCustomer(int lastId, CustomerDAO customerDAO) {
         int id = lastId + 1;
         String firstName = Input.getStringInputLimitNotNull(50, "Enter first name");
         String lastName = Input.getStringInputLimitNotNull(50, "Enter last name");
         String info = Input.getStringInputLimitNotNull(100, "Enter info");
 
         Customer customer = new Customer(id, firstName, lastName, info, new ArrayList<Integer>());
-        CustomerDAO customerDAO = new JdbcCustomerDAOImpl();
+
         try {
             System.out.println("Created new customer:");
             System.out.println(customer);
