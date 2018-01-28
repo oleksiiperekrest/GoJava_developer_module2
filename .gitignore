@@ -17,6 +17,7 @@
 
 # IntelliJ
 out/
+*.iml
 
 target/
 pom.xml.tag
