@@ -32,7 +32,7 @@ public class Controller {
         while (true) {
             Menu.selectTableMenu();
             int tableSelect = Input.getBoundIntInput("", 0, 5);
-            if (tableSelect == 0) break;
+            if (tableSelect == 0) System.exit(0);
             switch (tableSelect) {
                 case 1:
                     developers = developerDAO.getAll();
